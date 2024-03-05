@@ -1,4 +1,4 @@
-import { Application, Sprite } from 'pixi.js'
+import { Application, Sprite, Assets } from 'pixi.js'
 
 const app = new Application<HTMLCanvasElement>({
 	view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
@@ -9,11 +9,16 @@ const app = new Application<HTMLCanvasElement>({
 	height: 480
 });
 
-const clampy: Sprite = Sprite.from("clampy.png");
+async function loadTextureAndCreateSprite() {
+    const texture = await Assets.load('./athalia.png');
+    const clampy = Sprite.from(texture);
 
-clampy.anchor.set(0.5);
+    console.log("Hola mundo", clampy.width, clampy.height);
 
-clampy.x = 300;
-clampy.y = 300;
+    clampy.anchor.set(0);
+    clampy.x = 0;
+    clampy.y = 0;
 
-app.stage.addChild(clampy);
+    app.stage.addChild(clampy);
+}
+loadTextureAndCreateSprite();
