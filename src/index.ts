@@ -1,4 +1,4 @@
-import { Application, Sprite, Assets, Container, Point } from 'pixi.js'
+import { Application, Assets, AssetsManifest, Sprite } from 'pixi.js'
 
 const app = new Application<HTMLCanvasElement>({
 	view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
@@ -32,7 +32,7 @@ window.addEventListener("resize", () => {
 });
 window.dispatchEvent(new Event("resize"));
 
-async function loadTextureAndCreateSprite() {
+/*async function loadTextureAndCreateSprite() {
 	const texture = await Assets.load('./athalia.png');
 	const athalia = Sprite.from(texture);
 
@@ -61,5 +61,37 @@ async function loadTextureAndCreateSprite() {
 	sparkles.position.y = aux.y;
 	
 	app.stage.addChild(athaliaWithSparkle);
+}
+loadTextureAndCreateSprite(); */
+
+export const manifest : AssetsManifest = {
+    bundles: [
+        {
+            name: "bundleName",
+            assets: {
+                "athalia": "./athalia.png",
+                "sparkles": "./sparkles2.png",
+            }
+        }
+    ]
+};
+
+async function loadTextureAndCreateSprite() {
+    // Inicializa y carga los recursos utilizando el manifiesto
+    await Assets.init({ manifest: manifest });
+    await Assets.loadBundle("bundleName");
+
+    // Accede a las texturas cargadas del bundle
+    const texture = await Assets.load('athalia');
+	const athalia = Sprite.from(texture);
+    const texture1 = await Assets.load('sparkles');
+	const sparkles = Sprite.from(texture1);
+
+	sparkles.scale.set(0.1);
+	sparkles.position._x = 350;
+    
+	app.stage.addChild(sparkles);
+	app.stage.addChild(athalia);
+    
 }
 loadTextureAndCreateSprite();
